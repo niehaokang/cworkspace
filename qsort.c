@@ -7,40 +7,39 @@
 
 #include<stdio.h>
 #include<stdlib.h>
-int compare( const void * a, const void * b );
+
+typedef struct node
+{
+    int a;
+    int b;
+}node;
+
+int compare( const void *a, const void *b );
+
 int main()
 {
     int i;
-    int a[20];
-    int b[20][2];
+    node a[20];
     for( i = 0; i < 20; i++ )
     {
-        a[i] = (i + 2) * 19 % 20;
-        b[i][0] = ( i + 2 ) * 19 % 20;
-        b[i][1] = b[i][0] * 19 % 20;
+        a[i].a = rand() % 20;
+        a[i].b = rand() % 20;
     }
+    printf("Before sort\n");
     for( i = 0; i < 20; i++ )
-        printf("%d ", a[i]);
+        printf("%d %d\n", a[i].a, a[i].b);
     printf("\n");
+    qsort( a, 20, sizeof(node), compare );
+    //qsort( b, 20, sizeof(int) * 2, compare );
+    printf("After sort\n");
     for( i = 0; i < 20; i++ )
-    {
-        printf("%d %d", b[i][0], b[i][1]);
-        printf("\n");
-    }
-    qsort( a, 20, sizeof(int), compare );
-    qsort( b, 20, sizeof(int) * 2, compare );
-    for( i = 0; i < 20; i++ )
-        printf("%d ", a[i]);
-    printf("\n");
-    for( i = 0; i < 20; i++ )
-    {
-        printf("%d %d", b[i][0], b[i][1]);
-        printf("\n");
-    }
+        printf("%d %d\n", a[i].a, a[i].b);
     return 0;
 }
-
-int compare( const void * a, const void * b )
+int compare( const void *a, const void *b )
 {
-    return *(int*)a - *(int*)b;
+    if(((node *)a)->a == ((node *)b)->a ) 
+        return ((node *)a)->b - ((node *)b)->b;
+    else
+        return ((node *)a)->a - ((node *)b)->a; 
 }
