@@ -17,12 +17,18 @@ struct node
 
 bool compare(const node &a, const node &b)
 {
+/*
     if( a.a > b.a )
         return true;
     else if( a.a == b.a && a.b > b.b )
         return true;
     else
         return false;
+*/
+    if(a.a == b.a)
+        return a.b < b.b;
+    else
+        return a.a < b.a;
 }
 
 int main()

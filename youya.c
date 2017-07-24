@@ -9,28 +9,23 @@
 #include<math.h>
 int main()
 {
-    int s;
-    scanf("%d", &s);
-    int i, j, k;
+    int d;
+    scanf("%d", &d);
+    double j, k = (double) d;
     int count = 0;
-    for(i=0; i * i < s; i++);
-    if(i * i == s)
-        count ++;
-    for(j=1; j < i; j++)
+    double r = sqrt(k);
+    int i = floor(sqrt(k/2)) + 1;
+    if( r - floor(r) < 0.0000001)
+        count += 4;
+    else if( sqrt(k/2) - i + 1 < 0.0000001 )
+        count += 4;
+    while( i * i < d)
     {
-        for(k=1; k < i; k++)
-        {
-            if(j * j + k * k < s){
-                continue;
-            }
-            else if(j * j + k * k == s){
-                count ++;
-                break;
-            } else {
-                break;
-            }
-        }
+        j = sqrt( d - i * i);
+        if( j - floor(j) < 0.0000001)
+            count += 8;
+        i++;
     }
-    printf("%d\n",4 * count);
+    printf("%d\n", count);
     return 0;
 }

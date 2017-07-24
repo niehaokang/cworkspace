@@ -6,6 +6,7 @@
  ************************************************************************/
 
 #include<stdio.h>
+#include<math.h>
 #include<malloc.h>
 #define DATATYPE int
 
@@ -35,6 +36,16 @@ void constructurering(struct listnode *head);
 struct listnode * findbackward(struct listnode *head, int k);
 
 void reverselist(struct listnode **head);
+
+void reverseprint_nonrecursion(struct listnode * head);
+
+void reverseprint(struct listnode * head);
+
+void deletenode( struct listnode **head, int k );
+
+struct listnode * firstcommonnode(struct listnode * ln1, struct listnode *ln2);
+
+struct listnode * deleteduplication( struct listnode * head );
 
 /* print list */
 void print( struct listnode *head )
@@ -351,6 +362,165 @@ void reverselist(struct listnode **head)
     }
 }
 
+/* delete node in consta time */
+void deletenodeinconsttime(struct listnode **head, struct listnode *nodetodelete)
+{
+    if( !head || !nodetodelete )
+        return;
+    struct listnode *temp = NULL;
+    if( nodetodelete->next != NULL )
+    {
+        nodetodelete->data = nodetodelete->next->data;
+        temp = nodetodelete->next;
+        nodetodelete->next = temp->next; 
+        free(temp);
+    }
+    else if( *head == nodetodelete )
+    {
+        free(nodetodelete);
+        nodetodelete = NULL;
+        *head = NULL;
+    }
+    else
+    {
+        temp = *head;
+        while( temp->next != nodetodelete )
+            temp = temp->next;
+        temp->next = NULL;
+        free(nodetodelete);
+    }
+}
+
+/* delete first node which value equal k */
+void deletenode( struct listnode **head, int k )
+{
+    if( head == NULL || *head == NULL )
+        return;
+    struct listnode *nodetodelete = NULL, *ptrace = *head;;
+    if( (*head)->data == k )
+    {
+        nodetodelete = *head;
+        *head = (*head)->next;
+    }
+    else
+    {
+        while( ptrace->next != NULL && ptrace->next->data != k )
+            ptrace = ptrace->next;
+        if( ptrace->next != NULL && ptrace->next->data == k)
+        {
+            nodetodelete = ptrace->next;
+            ptrace->next = ptrace->next->next;
+        }
+    }
+    if( nodetodelete != NULL )
+    {
+        free(nodetodelete);
+        nodetodelete = NULL;
+    }
+}
+
+/* reverse output all element of list */
+void reverseprint(struct listnode * head)
+{
+    if(head == NULL)
+        return;
+    reverseprint(head->next);
+    printf("%d ", head->data);
+}
+
+/* reverse output all element of list */
+void reverseprint_nonrecursion(struct listnode * head)
+{
+    if(head == NULL)
+        return;
+    struct listnode * liststack[20];
+    struct listnode *temp = head;
+    int top = 0;
+    while( temp != NULL )
+    {
+        liststack[top++] = temp;
+        temp = temp->next;
+    }
+    while( top > 0 )
+    {
+        temp = liststack[--top];
+        printf("%d ", temp->data);
+    }
+    printf("\n");
+}
+
+/* find and return first common node of list ln1 and list ln2 */
+struct listnode * firstcommonnode(struct listnode * ln1, struct listnode *ln2)
+{
+    if( ln1 == NULL || ln2 == NULL )
+        return NULL;
+    struct listnode *first = ln1, *second = ln2;
+    int lenln1 = 0, lenln2 = 0;
+    int diff;
+    /* compulate length of two list */
+    while(first != NULL)
+    {
+        first = first->next;
+        lenln1++;
+    }
+    while(second != NULL)
+    {
+        second = second->next;
+        lenln2++;
+    }
+    /* compulate diff of two list length, longer move diff step firs */
+    if( lenln1 >= lenln2 )
+    {
+        diff = lenln1 - lenln2;
+        first = ln1;
+        second = ln2;
+    }
+    else
+    {
+        diff = lenln2 - lenln1;
+        first = ln2;
+        second = ln1;
+    }
+    while( diff > 0)
+    {
+        first = first->next;
+        diff--;
+    }
+    /* search firs common node */
+    while( first != '\0' && second != '\0' )
+    {
+        if( first == second )
+            return first;
+        else
+        {
+            first = first->next;
+            second = second->next;
+        }
+    }
+    return NULL;
+}
+
+struct listnode * deleteduplication( struct listnode * head )
+{
+    if ( head == NULL )
+        return NULL;
+    struct listnode *root = head;
+    struct listnode * p = root;
+    struct listnode *nodetodelete = NULL;
+    while( p != NULL )
+    {
+        if( p->next->data == p->data )
+        {
+            nodetodelete = p->next;
+            p->next = p->next->next;
+            free(nodetodelete);
+        }
+        else
+            p = p->next;
+    }
+    return root;
+}
+
 int main()
 {
     int a[20] = { 1, 3, 5, 7, 9, 11, 11, 11 };
@@ -362,6 +532,9 @@ int main()
     struct listnode *dhead = NULL;
     struct listnode *temp = NULL;
     printf("list a: ");
+    print(ahead);
+    deletenode(&ahead, 11);
+    printf("after delete first 11: ");
     print(ahead);
     printf("list b: ");
     print(bhead);
@@ -378,12 +551,24 @@ int main()
     printf("merge list a and list b to list d: ");
     dhead = mergelist(ahead, bhead);
     print(dhead);
+
+    temp = dhead;
+    while( temp->next != NULL )
+        temp = temp->next;
+    deletenodeinconsttime( &dhead, temp ); 
+    print(dhead);
+
+    printf("first common node's value of list a and list b: %d\n", firstcommonnode(ahead, bhead)->data);
     temp = findbackward(dhead, 3);
     if(temp != NULL)
         printf("the 3th value is %d in the backwards\n", temp->data);
     reverselist(&dhead);
     printf("after reverse of list d: ");
     print(dhead);
+    printf("reverse output list d: ");
+    reverseprint(dhead);
+    printf("\nreverse with non-recurision output list d: ");
+    reverseprint_nonrecursion(dhead);
     temp = findbackward(dhead, 3);
     if(temp != NULL)
         printf("the 3th value is %d in the backwards\n", temp->data);

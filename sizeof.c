@@ -6,8 +6,13 @@
  ************************************************************************/
 
 #include<stdio.h>
+
+struct test{
+}test;
+
 int main()
 {
+    printf("sizeof(test) = %d\n", (int)sizeof(test));
     printf("sizeof(char) = %d \n", (int)sizeof(char));
     printf("sizeof(int) = %d \n", (int)sizeof(int));
     printf("sizeof(long) = %d \n", (int)sizeof(long));

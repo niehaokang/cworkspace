@@ -36,6 +36,7 @@ int main()
         printf("%d %d\n", a[i].a, a[i].b);
     return 0;
 }
+
 int compare( const void *a, const void *b )
 {
     if(((node *)a)->a == ((node *)b)->a ) 
