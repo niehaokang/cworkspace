@@ -9,6 +9,7 @@
 #include<cstdlib>
 #include<ctime>
 #include<algorithm>
+#include<set>
 #define N (1 << 20)
 using namespace std;
 
@@ -31,6 +32,8 @@ void qsort( int *a, int length, int start, int end );
 void qsort_classic( int *a, int left, int right );
 
 void topk_qsort( int *num, int len, int k );
+
+void topk_heapsort( int *num, int len, int k, multiset< int, greater<int> > &mset );
 
 void print(int i)
 {
@@ -74,18 +77,50 @@ int main()
     cout << endl;
     cout << "find 10 in array b" << binarysearch(b, N, 10) << endl;
     cout << "find 10 in array b" << sequencesearch(b, N, 10) << endl;
-*/
-    for( int i = 0; i < N >> 15; i++ )
-        topk_qsort( b, N, 10 );
-    for( int i = 0; i < 10; i++ )
-        cout << b[i] << " ";
-    cout << endl;
     for( int i = 0; i < N >> 15; i++ )
         qsort( b, N, 0, N - 1 );
     for( int i = 0; i < 10; i++ )
         cout << b[i] << " ";
     cout << endl;
+*/
+    for( int i = 0; i < N >> 13; i++ )
+        topk_qsort( b, N, 10 );
+    for( int i = 0; i < 10; i++ )
+        cout << b[i] << " ";
+    cout << endl;
+    multiset< int, greater<int> > mset;
+    for( int i = 0; i < N >> 13; i++ )
+        topk_heapsort( b, N, 10, mset );
+    mset.clear();
+    topk_heapsort( b, N, 10, mset );
+    multiset< int, greater<int> > :: iterator it;
+    for( it = mset.begin(); it != mset.end(); ++it )
+        cout << *it << " ";
     return 0;
+}
+
+void topk_heapsort( int *num, int len, int k, multiset< int, greater<int> > &mset )
+{
+    if( num == NULL )
+    {
+        cout << "bad input...\n";
+        return;
+    }
+    if( k < 1 || len < k )
+        return;
+    for( int i = 0; i < len; i++ )
+    {
+        if( mset.size() < k )
+            mset.insert(num[i]);
+        else
+        {
+            if( num[i] < *(mset.begin()) )
+            {
+                mset.erase(mset.begin());
+                mset.insert(num[i]);
+            }
+        }
+    }
 }
 
 void topk_qsort( int *num, int len, int k )
