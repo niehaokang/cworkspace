@@ -4,15 +4,13 @@
 
 #include <iostream>
 #include <algorithm>
-#include<vector>
+#include <vector>
 #include <deque>
 using namespace std;
 
 /*
 3.疯狂队列，贪心方法，每一次将最大的疯狂值的序列加入
 */
-
-
 
 int main()
 {
@@ -59,7 +57,6 @@ int main()
             ans += abs(deque_crazy[i] - deque_crazy[i-1]);
         }
         cout<<ans<<endl;
-
     }
     return 0;
 }
