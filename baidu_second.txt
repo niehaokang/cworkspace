@@ -1,0 +1,85 @@
+
+static全局变量与普通的全局变量有什么区别?
+
+
+假设你只知道一个数组的数组名（a[]),如何确定这个数组的长度？
+sizeof
+
+
+int length = sizeof(a)/sizeof(a[0]);
+
+区别int (*p)[5]和int *p[5];
+
+
+char string[] = "Linux C";
+char *p = "Linux C";
+string[0] = 'a';
+p[0] = 'a';
+
+
+删除链表中等于给定值val的所有节点。
+
+给出链表 1->2->3->3->4->5->3, 和 val = 3, 你需要返回删除3之后的链表：1->2->4->5。
+
+struct listnode
+{
+    int val;
+    struct listnode * next;
+};
+
+struct listnode * deleteval(struct listnode * head, int val)
+{
+    if( head == NULL)
+        return;
+    struct listnode *index = head->next, preindex = head;
+    struct listnode *temp = NULL;
+    while( index != NULL)
+    {
+        if( index->val == val)
+        {
+            temp = index;
+            index = index->next;
+            preindex->next = index;
+            free(temp);
+        }
+    }
+    retrun head;
+}
+
+
+输入一个单向链表，判断链表是否有环。如果链表存在环，如何找到环的入口点？
+
+bool find_node(struct listnode *node, vector<struct listnode *> &vec_listnode)
+{
+    vector<struct listnode *>::iterator it;
+    while( it = vec_listnode.begin(); it != vec_listnode.end(); it++)
+        if( *it == node)
+            return true;
+    return false;
+}
+
+struct listnode * entry( struct listnode * head)
+{
+    if( head == NULL)
+        return NULL;
+    struct listnode * index = head->next;
+    vector<struct listnode *> vec_listnode;
+    while( index != NULL)
+    {
+        if(find_node( index, vec_listnode))
+        {
+            return index;
+            break;
+        }
+        else
+        {
+            vec_listnode.push(index);
+            index = index->next;
+        }  
+    }
+    return NULL;
+}
+
+select ,epoll; IO linux
+
+systemcall 

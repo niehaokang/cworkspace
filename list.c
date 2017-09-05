@@ -8,6 +8,8 @@
 #include<stdio.h>
 #include<math.h>
 #include<malloc.h>
+#include<stdlib.h>
+#include<time.h>
 #define DATATYPE int
 
 struct listnode{
@@ -24,6 +26,10 @@ void addtail(struct listnode **head, int value);
 void insertsortlist( struct listnode **head );
 
 struct listnode * selectsortlist( struct listnode *head );
+
+struct listnode *partition( struct listnode *begin, struct listnode *end ); 
+
+void quicksortlist( struct listnode *head, struct listnode* end );
 
 struct listnode * mergelist( struct listnode *ahead, struct listnode *bhead );
 
@@ -208,6 +214,72 @@ struct listnode * selectsortlist( struct listnode *head )
         tail = min;
     }
     return head;
+}
+
+static void swap( struct listnode * node1, struct listnode * node2 )
+{
+    DATATYPE temp;
+    temp = node1->data;
+    node1->data = node2->data;
+    node2->data = temp;
+}
+
+/* qsort partition function */
+/*
+struct listnode *partition( struct listnode *begin, struct listnode *end )
+{
+    if( begin == NULL )
+    {
+        printf("bad input...\n");
+        exit(-1);
+    }
+    DATATYPE temp, key = begin->data;
+    struct listnode *small = begin;
+    struct listnode *index = begin->next;
+    while( index != end)
+    {
+        if( index->data < key )
+        {
+            small = small->next;
+            if( small != index )
+                swap( small, index );
+        }
+        index = index->next;
+    }
+    swap( begin, small );
+    return small;
+}
+*/
+struct listnode * partition( struct listnode *begin, struct listnode* end )
+{
+    struct listnode *small = begin;
+    struct listnode *index = begin->next;
+    DATATYPE key = begin->data;
+    while( index != end )
+    {
+        if( index->data < key )
+        {
+            small = small->next;
+            if( small != index )
+                swap(small, index);
+        }
+        index = index->next;
+    }
+    swap( begin, small );
+    return small;
+}
+
+/* quick sort for list */
+void quicksortlist( struct listnode *head, struct listnode *end )
+{
+    if( head == NULL )
+        return;
+    if( head != end )
+    {
+        struct listnode * index = partition( head, end );
+        quicksortlist( head, index );
+        quicksortlist( index->next, end);
+    }
 }
 
 /* merge two ordered list */
@@ -521,15 +593,26 @@ struct listnode * deleteduplication( struct listnode * head )
     return root;
 }
 
+int compare( const void *a, const void *b )
+{
+    return *(int*)a - *(int*)b;
+}
+
 int main()
 {
     int a[20] = { 1, 3, 5, 7, 9, 11, 11, 11 };
     int b[10] = { 0, 0, 0, 0, 2, 4, 6, 8 };
     int c[20] = { 1, 9, 3, 8, 5, 4, 6, 7, 2, 0 };
+    int r[20];
+    srand( time(NULL) );
+    int i;
+    for( i = 0; i < 20; i++ )
+        r[i] = rand() % 20;
     struct listnode *ahead = creatlist(a, 8);
     struct listnode *bhead = creatlist(b, 8);
     struct listnode *chead = creatlist(c, 10);
     struct listnode *dhead = NULL;
+    struct listnode *rhead = creatlist(r, 20);
     struct listnode *temp = NULL;
     printf("list a: ");
     print(ahead);
@@ -544,10 +627,24 @@ int main()
     printf("add 10 to the tail of list c: ");
     addtail(&chead, 10);
     print(chead);
+    printf("qsort list c: ");
+    quicksortlist( chead, NULL );
+    print(chead);
     printf("sort list c: ");
     insertsortlist(&chead);
     chead = selectsortlist(chead);
     print(chead);
+    for( i = 0; i < 20; i++ )
+        printf("%d ", r[i]);
+    printf("\n");
+    qsort( r, 20, sizeof(int), compare );
+    for( i = 0; i < 20; i++ )
+        printf("%d ", r[i]);
+    printf("\n");
+    print(rhead);
+    quicksortlist( rhead, NULL );
+    print(rhead);
+    /*
     printf("merge list a and list b to list d: ");
     dhead = mergelist(ahead, bhead);
     print(dhead);
@@ -583,5 +680,6 @@ int main()
     print(chead);
     print(dhead);
     printf("ring addr of list c = %p\n", myjudgering(chead));
+    */
     return 0;
 }
