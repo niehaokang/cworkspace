@@ -8,81 +8,70 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
+#define N 1000000000
 
-long fibonacci( int N );
+unsigned long fibonacci( unsigned long n );
 
-long fibonacci_matrix( int N );
+unsigned long my_fibonacci_matrix( unsigned long n );
 
 int main()
 {
-    int i;
-    int n = 12;
-    for( i = 0; i < 1 << 25; i++ )
-//        fibonacci_matrix(n);
-//    printf("%ld\n", fibonacci_matrix(n));
-        fibonacci( n );
+    for( int n = 48; n < 56; n++)
+    {
+    my_fibonacci_matrix(n);
+    printf("%ld\n", my_fibonacci_matrix(n));
+    fibonacci( n );
     printf("%ld\n", fibonacci(n));
+    }
     return 0;
 }
 
-long fibonacci( int N )
+unsigned long fibonacci( unsigned long n )
 {
-    long one = 0;
-    long two = 1;
-    long fib;
-    if( N < 0 )
-    {
-        printf("Bad input...\n");
-        exit(-1);
-    }
-    if( N == 0 )
+    unsigned long one = 0;
+    unsigned long two = 1;
+    unsigned long fib;
+    if( n == 0 )
         return 0;
-    else if( N == 1 )
+    else if( n == 1 )
         return 1;
-    else if( N > 1 )
+    else if( n > 1 )
     {
-        int i;
-        for( i = 2; i <= N; i++ )
+        unsigned long i;
+        for( i = 2; i <= n; i++ )
         {
-            fib = one + two;
-            one = two;
+            fib = (one + two) % N;
+            one = two % N;
             two = fib;
         }
         return fib;
     }
 }
 
-long fibonacci_matrix( int N )
+unsigned long my_fibonacci_matrix( unsigned long n )
 {
-    int num = (N + 1) / 2;
-    long temp[2][2];
-    long matrix[2][2] = {2, 1, 1, 1};
-    long result[2][2] = {1, 0, 0, 1};
-    while( num != 0 )
+    if( n == 1 || n == 2)
+        return 1;
+    unsigned long n_2 = n - 2;
+    unsigned long a[2][2] = {1, 0, 0, 1};
+    unsigned long b[2][2] = {1, 1, 1, 0};
+    unsigned long c[2][2];
+    while( n_2 != 0)
     {
-        if(num & 1)
+        if( n_2 & 1)
         {
-            temp[0][0] = result[0][0] * matrix[0][0] + result[0][1] * matrix[1][0];
-            temp[0][1] = result[0][0] * matrix[0][1] + result[0][1] * matrix[1][1];
-            temp[1][0] = result[1][0] * matrix[0][0] + result[1][1] * matrix[1][0];
-            temp[1][1] = result[1][0] * matrix[0][1] + result[1][1] * matrix[1][1];
-            result[0][0] = temp[0][0];
-            result[0][1] = temp[0][1];
-            result[1][0] = temp[1][0];
-            result[1][1] = temp[1][1];
+            c[0][0] = ((a[0][0] * b[0][0]) % N + (a[0][1] * b[1][0]) % N) % N;
+            c[0][1] = ((a[0][0] * b[0][1]) % N + (a[0][1] * b[1][1]) % N) % N;
+            c[1][0] = ((a[1][0] * b[0][0]) % N + (a[1][1] * b[1][0]) % N) % N;
+            c[1][1] = ((a[1][0] * b[0][1]) % N + (a[1][1] * b[1][1]) % N) % N;
+            memcpy(a, c, 4 * sizeof(long));
         }
-        temp[0][0] = matrix[0][0] * matrix[0][0] + matrix[0][1] * matrix[1][0];
-        temp[0][1] = matrix[0][0] * matrix[0][1] + matrix[0][1] * matrix[1][1];
-        temp[1][0] = matrix[1][0] * matrix[0][0] + matrix[1][1] * matrix[1][0];
-        temp[1][1] = matrix[1][0] * matrix[0][1] + matrix[1][1] * matrix[1][1];
-        matrix[0][0] = temp[0][0];
-        matrix[0][1] = temp[0][1];
-        matrix[1][0] = temp[1][0];
-        matrix[1][1] = temp[1][1];
-        num = num >> 1;
+        c[0][0] = ((b[0][0] * b[0][0]) % N + (b[0][1] * b[1][0]) % N) % N;
+        c[0][1] = ((b[0][0] * b[0][1]) % N + (b[0][1] * b[1][1]) % N) % N;
+        c[1][0] = ((b[1][0] * b[0][0]) % N + (b[1][1] * b[1][0]) % N) % N;
+        c[1][1] = ((b[1][0] * b[0][1]) % N + (b[1][1] * b[1][1]) % N) % N;
+        memcpy(b, c, 4 * sizeof(long));
+        n_2 >>= 1;
     }
-    if( N & 1 )
-        return result[1][1];
-    else
-        return result[0][1];
+    return (a[0][0] + a[0][1]) % N;
 }

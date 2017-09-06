@@ -29,7 +29,7 @@ int main()
         {
             int head = deque_crazy.front();
             int tail = deque_crazy.back();
-            int crazy1 = abs(head - vec_h[i]);
+            int crazy1 = ab(head - vec_h[i]);
             int crazy2 = abs(head - vec_h[j]);
             int crazy3 = abs(tail -vec_h[i]);
             int crazy4 = abs(tail - vec_h[j]);
