@@ -16,7 +16,8 @@ unsigned long my_fibonacci_matrix( unsigned long n );
 
 int main()
 {
-    for( int n = 48; n < 56; n++)
+    int n = 50;
+//    for( ; n < 0xffffffff; n++ )
     {
     my_fibonacci_matrix(n);
     printf("%ld\n", my_fibonacci_matrix(n));
@@ -56,7 +57,7 @@ unsigned long my_fibonacci_matrix( unsigned long n )
     unsigned long a[2][2] = {1, 0, 0, 1};
     unsigned long b[2][2] = {1, 1, 1, 0};
     unsigned long c[2][2];
-    while( n_2 != 0)
+    while( 1 )
     {
         if( n_2 & 1)
         {
@@ -66,12 +67,17 @@ unsigned long my_fibonacci_matrix( unsigned long n )
             c[1][1] = ((a[1][0] * b[0][1]) % N + (a[1][1] * b[1][1]) % N) % N;
             memcpy(a, c, 4 * sizeof(long));
         }
-        c[0][0] = ((b[0][0] * b[0][0]) % N + (b[0][1] * b[1][0]) % N) % N;
-        c[0][1] = ((b[0][0] * b[0][1]) % N + (b[0][1] * b[1][1]) % N) % N;
-        c[1][0] = ((b[1][0] * b[0][0]) % N + (b[1][1] * b[1][0]) % N) % N;
-        c[1][1] = ((b[1][0] * b[0][1]) % N + (b[1][1] * b[1][1]) % N) % N;
-        memcpy(b, c, 4 * sizeof(long));
-        n_2 >>= 1;
+        if( n_2 >> 1 != 0 )
+        {
+            c[0][0] = ((b[0][0] * b[0][0]) % N + (b[0][1] * b[1][0]) % N) % N;
+            c[0][1] = ((b[0][0] * b[0][1]) % N + (b[0][1] * b[1][1]) % N) % N;
+            c[1][0] = ((b[1][0] * b[0][0]) % N + (b[1][1] * b[1][0]) % N) % N;
+            c[1][1] = ((b[1][0] * b[0][1]) % N + (b[1][1] * b[1][1]) % N) % N;
+            memcpy(b, c, 4 * sizeof(long));
+            n_2 >>= 1;
+        }
+        else
+            break;
     }
     return (a[0][0] + a[0][1]) % N;
 }
