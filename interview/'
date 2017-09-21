@@ -1,0 +1,31 @@
+/*************************************************************************
+	> File Name: mystrcpy.cpp
+	> Author: Datou_Nie
+	> Mail: niehaokang@gmail.com
+	> Created Time: 2017年09月20日 星期三 15时41分29秒
+ ************************************************************************/
+
+#include<iostream>
+#include<cstring>
+using namespace std;
+
+char *mystrcpy( char *dest, const char * src )
+{
+    if( dest == NULL || src == NULL )
+        return NULL;
+    else if( dest == src )
+        return dest;
+    if( dest > src )
+    {
+        while( src[i] != '\0' )
+            i++;
+    }
+}
+
+int main()
+{
+    char src[20] = "Hello World!";
+    strcpy(src + 3, src + 6);
+    cout << src << endl;
+    return 0;
+}
