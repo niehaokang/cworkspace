@@ -16,7 +16,7 @@ unsigned long my_fibonacci_matrix( unsigned long n );
 
 int main()
 {
-    int n = 50;
+    int n = 11;
     my_fibonacci_matrix(n);
     printf("%ld\n", my_fibonacci_matrix(n));
     fibonacci( n );
